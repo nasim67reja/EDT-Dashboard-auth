@@ -18,13 +18,13 @@ body {
   @apply flex justify-center items-center;
 }
 .text-small {
-  @apply text-[12px] md:text-[14px];
+  @apply text-[13px] 2xl:text-[14px];
 }
 .text-standard {
-  @apply text-[14px] md:text-[16px];
+  @apply text-[14px] 2xl:text-[16px];
 }
 .heading-secondary {
-  @apply text-[18px] sm:text-[20px] md:text-[30px] lg:text-[32px] xl:text-[36px];
+  @apply text-[18px] sm:text-[20px] md:text-[30px] lg:text-[30px] 2xl:text-[36px];
 }
 
 /* some other classes */

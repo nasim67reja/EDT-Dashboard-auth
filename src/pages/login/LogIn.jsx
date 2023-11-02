@@ -7,20 +7,25 @@ import Apple from "../../assets/Apple.png";
 import Heading2 from "../../components/common/fonts/Heading2";
 import Input from "../../components/common/inputs/Input";
 import Button from "../../components/common/inputs/Button";
+import AuthForm from "../../components/specific/AuthForm";
 
 const LogIn = () => {
   return (
     <>
       <section className="grid grid-cols-[63.2%_36.8%]">
         <img src={city} alt="" className="w-full h-screen object-cover" />
-        <div className="2xl:p-[70px] p-[50px]">
+        <div className="2xl:p-[70px] p-[30px] px-[70px]">
           <div className="center">
-            <img src={logo} alt="" className="w-[184px] h-auto mb-[5rem]" />
+            <img
+              src={logo}
+              alt=""
+              className="w-[184px] h-auto 2xl:mb-[5rem] mb-[2rem]"
+            />
           </div>
           <Heading2 className="text-center mb-6">Welcome to abc</Heading2>
-          <WelcomeForm />
+          <AuthForm />
 
-          <div className="my-[3rem] flex gap-4 items-center">
+          <div className="my-[2rem] 2xl:my-[3rem] flex gap-4 items-center">
             <div className=" w-[45%] h-[1px] bg-[#AAAAAA]"></div>
             <p className="text-small text-[#777777]">Or</p>
             <div className=" w-[45%] h-[1px] bg-[#AAAAAA]"></div>
@@ -60,25 +65,3 @@ const LogIn = () => {
 };
 
 export default LogIn;
-
-const WelcomeForm = () => {
-  const [name, setName] = useState("");
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-  return (
-    <div>
-      <Input
-        label="Name"
-        type="text"
-        placeholder="Enter your name"
-        value={name}
-        onChange={handleNameChange}
-      />
-      <Button className="w-full font-roboto">Continue with email</Button>
-    </div>
-  );
-};
-
-const SocialLogin = () => {};

@@ -8,18 +8,23 @@ const Button = ({
   backgroundColor,
   textColor,
   fontSize,
+  type,
 }) => {
   // Combine the default styles with the design class
   const buttonStyles = `${
     backgroundColor ? `${backgroundColor}` : "bg-primary"
   } ${textColor ? `text-[${textColor}]` : "text-[#fff]"} ${
-    padding ? `p-[${padding}px]` : "p-[12px]"
+    padding ? `p-[${padding}px]` : "p-[9px] 2xl:p-[12px]"
   } rounded-md
   ${fontSize ? `text-[${fontSize}px]` : "text-standard"}
   ${className} `;
 
   return (
-    <button className={buttonStyles} onClick={onClick}>
+    <button
+      type={type ? type : "button"}
+      className={buttonStyles}
+      onClick={onClick}
+    >
       {children}
     </button>
   );
