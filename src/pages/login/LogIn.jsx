@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import city from "../../assets/city.png";
 import logo from "../../assets/logo.png";
 import Google from "../../assets/Google.png";
 import Apple from "../../assets/Apple.png";
 
 import Heading2 from "../../components/common/fonts/Heading2";
-import Input from "../../components/common/inputs/Input";
 import Button from "../../components/common/inputs/Button";
 import AuthForm from "../../components/specific/AuthForm";
 

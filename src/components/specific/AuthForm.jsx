@@ -27,12 +27,6 @@ const AuthForm = () => {
       {/* Continue */}
       {!isContinue ? (
         <>
-          <p
-            className="text-small underline text-[#202020] absolute right-0 cursor-pointer"
-            onClick={() => setEmailIsActive(!emailIsActive)}
-          >
-            {emailIsActive ? "Try mobile number" : "Try email"}
-          </p>
           {emailIsActive ? (
             <Input
               label="Email"
@@ -41,6 +35,9 @@ const AuthForm = () => {
               value={name}
               onChange={handleNameChange}
               onClear={handleNameClear}
+              error={error}
+              identifire={"Try mobile number"}
+              onclick={() => setEmailIsActive(!emailIsActive)}
             />
           ) : (
             <Input
@@ -50,13 +47,12 @@ const AuthForm = () => {
               value={name}
               onChange={handleNameChange}
               onClear={handleNameClear}
+              identifire={"Try email"}
+              onclick={() => setEmailIsActive(!emailIsActive)}
+              error={error}
             />
           )}
-          {error && (
-            <p className="text-small text-[#ff0000] translate-y-[-12px]">
-              {error}
-            </p>
-          )}
+
           <Button onClick={continueHandler} className="w-full font-roboto">
             {emailIsActive ? "Continue with email" : "Continue with Number"}
           </Button>
