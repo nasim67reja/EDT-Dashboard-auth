@@ -3,10 +3,12 @@ import React from "react";
 import { useState } from "react";
 import Input from "../common/inputs/Input";
 import Button from "../common/inputs/Button";
+import Loader from "../common/utils/Loader";
 
 const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [emailIsActive, setEmailIsActive] = useState(true);
   const [isContinue, setIsContinue] = useState(false);
@@ -18,6 +20,7 @@ const AuthForm = () => {
   });
 
   const verifyIdentity = async () => {
+    setIsLoading(true);
     try {
       const url =
         "https://vg30a7so1g.execute-api.us-west-2.amazonaws.com/dev/auth/authentication/signin-passwordless";
@@ -39,6 +42,7 @@ const AuthForm = () => {
       console.error("Error:", error);
       setError(error.response.data.message || "something went wrong");
     }
+    setIsLoading(false);
   };
 
   const continueHandler = () => {
@@ -110,7 +114,13 @@ const AuthForm = () => {
           )}
 
           <Button onClick={continueHandler} className="w-full font-roboto">
-            {emailIsActive ? "Continue with email" : "Continue with Number"}
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <>
+                {emailIsActive ? "Continue with email" : "Continue with Number"}
+              </>
+            )}
           </Button>
         </>
       ) : (
