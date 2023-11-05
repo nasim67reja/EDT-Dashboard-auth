@@ -5,6 +5,15 @@ import Input from "../common/inputs/Input";
 import Button from "../common/inputs/Button";
 import Loader from "../common/utils/Loader";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
+
+const notify = () =>
+  toast.success("code has been sent.Check your device!", {
+    position: "top-center",
+  });
+
 const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState(null);
@@ -19,6 +28,7 @@ const AuthForm = () => {
     username: "",
   });
 
+  // Continue with email/ mobile  api caller function
   const verifyIdentity = async () => {
     setIsLoading(true);
     try {
@@ -30,8 +40,8 @@ const AuthForm = () => {
       };
       const response = await axios.post(url, data);
 
-      // Handle the response as needed
-      setIsContinue(true);
+      notify();
+      setIsContinue(true); // next step will occur
       setError("");
       setAuthData({
         session: response.data.data.Session,
@@ -53,38 +63,44 @@ const AuthForm = () => {
     setError("Please fill the input field");
   };
 
-  const logIn = async () => {
-    try {
-      const url =
-        "https://vg30a7so1g.execute-api.us-west-2.amazonaws.com/dev/auth/authentication/otp-passwordless";
-      console.log("authdata", authData);
-
-      const data = {
-        challengeName: "CUSTOM_CHALLENGE",
-        otp: code,
-        session: authData.session,
-        username: authData.username,
-      };
-
-      const response = await axios.post(url, data);
-
-      // Handle the response as needed
-      console.log("Response:", response.data);
-    } catch (error) {
-      // Handle errors
-      console.error("Error:", error);
-    }
-  };
-
   const loginHandler = (e) => {
     e.preventDefault();
+
+    // actual login api caller
+    const logIn = async () => {
+      setIsLoading(true);
+      try {
+        const url =
+          "https://vg30a7so1g.execute-api.us-west-2.amazonaws.com/dev/auth/authentication/otp-passwordless";
+
+        const data = {
+          challengeName: "CUSTOM_CHALLENGE",
+          otp: code,
+          session: authData.session,
+          username: authData.username,
+        };
+
+        const response = await axios.post(url, data);
+
+        // Handle the response as needed
+        console.log("Response:", response.data);
+        setError("");
+
+        Cookies.set("accessToken", response.data.data.accessToken);
+        window.location.href = "/";
+      } catch (error) {
+        // Handle errors
+        console.error("Error:", error);
+        setError(error.response.data.message || "something went wrong");
+      }
+      setIsLoading(false);
+    };
 
     logIn();
   };
 
   return (
     <form className="relative" onSubmit={loginHandler}>
-      {/* Continue */}
       {!isContinue ? (
         <>
           {emailIsActive ? (
@@ -156,16 +172,16 @@ const AuthForm = () => {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             onClear={() => setCode("")}
-            // value={name}
-            // onChange={handleNameChange}
-            // onClear={handleNameClear}
+            error={error}
           />
 
           <Button type="submit" className="w-full">
-            Log in
+            {isLoading ? <Loader /> : "Log in"}
           </Button>
         </>
       )}
+
+      <ToastContainer />
     </form>
   );
 };

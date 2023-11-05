@@ -5,8 +5,8 @@ const Loader = () => {
   return (
     <div className="center">
       <Bars
-        height="20"
-        width="20"
+        height="24"
+        width="24"
         color="#fff"
         ariaLabel="bars-loading"
         wrapperStyle={{}}
