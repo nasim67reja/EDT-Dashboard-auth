@@ -1,7 +1,7 @@
 import React from "react";
 import { FaSearch, FaHome, FaChartBar, FaCog } from "react-icons/fa";
 import Button from "../../components/common/inputs/Button";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 const Dashboard = () => {
   return (
@@ -52,7 +52,7 @@ const Dashboard = () => {
 
             <Button
               onClick={() => {
-                Cookies.remove("accessToken");
+                localStorage.removeItem("accessToken");
                 window.location.reload();
               }}
             >

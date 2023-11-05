@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MyTextInput } from "../common/inputs/Input";
 import Button from "../common/inputs/Button";
 import "react-toastify/dist/ReactToastify.css";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { baseURL } from "../common/utils/URL";
@@ -69,7 +69,11 @@ const AuthForm = () => {
         console.log("Response:", response.data);
         setError("");
 
-        Cookies.set("accessToken", response.data.data.accessToken);
+        // Cookies.set("accessToken", response.data.data.accessToken);
+
+        // Use localStorage to store the accessToken
+        localStorage.setItem("accessToken", response.data.data.accessToken);
+
         window.location.href = "/";
       } catch (error) {
         // Handle errors
