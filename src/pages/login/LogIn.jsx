@@ -7,13 +7,14 @@ import Apple from "../../assets/Apple.png";
 import Heading2 from "../../components/common/fonts/Heading2";
 import Button from "../../components/common/inputs/Button";
 import AuthForm from "../../components/specific/AuthForm";
+// import SignupForm from "./Formik";
 
 const LogIn = () => {
   return (
     <>
       <section className="grid grid-cols-[63.2%_36.8%]">
         <img src={city} alt="" className="w-full h-screen object-cover" />
-        <div className="2xl:p-[70px] p-[30px] px-[70px]">
+        <div className="2xl:p-[70px] p-[30px] px-[70px] h-screen overflow-y-auto">
           <div className="center">
             <img
               src={logo}
@@ -23,6 +24,7 @@ const LogIn = () => {
           </div>
           <Heading2 className="text-center mb-6">Welcome to abc</Heading2>
           <AuthForm />
+          {/* <SignupForm /> */}
 
           <div className="my-[2rem] 2xl:my-[3rem] flex gap-4 items-center">
             <div className=" w-[45%] h-[1px] bg-[#AAAAAA]"></div>

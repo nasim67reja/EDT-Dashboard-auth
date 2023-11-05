@@ -86,23 +86,30 @@ const AuthForm = () => {
     <>
       <Formik
         initialValues={{
-          email: "",
-          number: "",
+          [emailIsActive ? "email" : "number"]: "",
           code: "",
         }}
-        validationSchema={Yup.object({
-          email: Yup.string()
-            .email("Invalid email address")
-            .required("Required"),
-          number: Yup.string()
-            .matches(
-              /^\+88\d{11}$/,
-              "Must start with +88 and be 14 characters long"
-            )
-            .required("Required"),
-          code: Yup.string()
-            .matches(/^[0-9]{6}$/, "Must be exactly 6 digits long")
-            .required("Required"),
+        validationSchema={Yup.object(() => {
+          const schema = {
+            code: Yup.string()
+              .matches(/^[0-9]{6}$/, "Must be exactly 6 digits long")
+              .required("Required"),
+          };
+
+          if (emailIsActive) {
+            schema.email = Yup.string()
+              .email("Invalid email address")
+              .required("Required");
+          } else {
+            schema.number = Yup.string()
+              .matches(
+                /^\+88\d{11}$/,
+                "Must start with +88 and be 14 characters long"
+              )
+              .required("Required");
+          }
+
+          return schema;
         })}
         onSubmit={(values, { setSubmitting }) => {
           // Continue with your form submission logic
@@ -167,14 +174,7 @@ const AuthForm = () => {
                   placeholder="Enter your code"
                   error={error}
                 />
-                <Button
-                  onClick={() => {
-                    loginHandler(values);
-                  }}
-                  loading={isLoading}
-                  type="submit"
-                  className="w-full"
-                >
+                <Button loading={isLoading} type="submit" className="w-full">
                   Log in
                 </Button>
               </>
