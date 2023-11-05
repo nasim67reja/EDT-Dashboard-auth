@@ -4,10 +4,8 @@ import logo from "../../assets/logo.png";
 import Google from "../../assets/Google.png";
 import Apple from "../../assets/Apple.png";
 
-import Heading2 from "../../components/common/fonts/Heading2";
 import Button from "../../components/common/inputs/Button";
 import AuthForm from "../../components/specific/AuthForm";
-import SignupForm from "./Formik";
 
 const LogIn = () => {
   return (
@@ -22,7 +20,7 @@ const LogIn = () => {
               className="w-[184px] h-auto 2xl:mb-[5rem] mb-[2rem]"
             />
           </div>
-          <Heading2 className="text-center mb-6">Welcome to abc</Heading2>
+          <h2 className="heading-secondary text-center mb-6">Welcome to abc</h2>
           <AuthForm />
           {/* <SignupForm /> */}
 

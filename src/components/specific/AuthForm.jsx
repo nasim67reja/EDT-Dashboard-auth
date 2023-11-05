@@ -35,8 +35,8 @@ const AuthForm = () => {
         setError("Unexpected error occurred");
       }
     } catch (error) {
-      // Handle errors
       console.error("Error:", error);
+      // here need to generate relevant error message
       setError(error.response?.data?.message || "Something went wrong");
     }
     setIsLoading(false);
