@@ -7,7 +7,7 @@ import Apple from "../../assets/Apple.png";
 import Heading2 from "../../components/common/fonts/Heading2";
 import Button from "../../components/common/inputs/Button";
 import AuthForm from "../../components/specific/AuthForm";
-// import SignupForm from "./Formik";
+import SignupForm from "./Formik";
 
 const LogIn = () => {
   return (
