@@ -17,11 +17,12 @@ const notify = () =>
 const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
   const [emailIsActive, setEmailIsActive] = useState(true);
   const [isContinue, setIsContinue] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [code, setCode] = useState("");
   const [authData, setAuthData] = useState({
     session: "",
