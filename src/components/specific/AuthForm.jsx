@@ -86,30 +86,25 @@ const AuthForm = () => {
     <>
       <Formik
         initialValues={{
-          [emailIsActive ? "email" : "number"]: "",
+          email: emailIsActive ? "" : "",
+          number: emailIsActive ? "" : "",
           code: "",
         }}
-        validationSchema={Yup.object(() => {
-          const schema = {
-            code: Yup.string()
-              .matches(/^[0-9]{6}$/, "Must be exactly 6 digits long")
-              .required("Required"),
-          };
-
-          if (emailIsActive) {
-            schema.email = Yup.string()
-              .email("Invalid email address")
-              .required("Required");
-          } else {
-            schema.number = Yup.string()
-              .matches(
-                /^\+88\d{11}$/,
-                "Must start with +88 and be 14 characters long"
-              )
-              .required("Required");
-          }
-
-          return schema;
+        validationSchema={Yup.object({
+          code: Yup.string()
+            .matches(/^[0-9]{6}$/, "Must be exactly 6 digits long")
+            .required("Required"),
+          email: emailIsActive
+            ? Yup.string().email("Invalid email address").required("Required")
+            : null,
+          number: emailIsActive
+            ? null
+            : Yup.string()
+                .matches(
+                  /^\+88\d{11}$/,
+                  "Must start with +88 and be 14 characters long"
+                )
+                .required("Required"),
         })}
         onSubmit={(values, { setSubmitting }) => {
           // Continue with your form submission logic
