@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# UseFull Resources
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[How do I access current value of a formik field without submitting?](https://stackoverflow.com/questions/60491891/how-do-i-access-current-value-of-a-formik-field-without-submitting).
 
 ## Available Scripts
 

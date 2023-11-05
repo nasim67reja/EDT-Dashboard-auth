@@ -1,4 +1,5 @@
 import React from "react";
+import Loader from "../utils/Loader";
 
 const Button = ({
   className,
@@ -9,6 +10,7 @@ const Button = ({
   textColor,
   fontSize,
   type,
+  loading,
 }) => {
   // Combine the default styles with the design class
   const buttonStyles = `${
@@ -25,7 +27,13 @@ const Button = ({
       className={buttonStyles}
       onClick={onClick}
     >
-      {children}
+      {loading ? (
+        <>
+          <Loader />
+        </>
+      ) : (
+        children
+      )}
     </button>
   );
 };
