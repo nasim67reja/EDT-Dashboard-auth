@@ -148,8 +148,8 @@ const AuthForm = () => {
               type="email"
               placeholder="Enter your email address ..."
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onClear={() => setEmail("")}
+              // onChange={(e) => setEmail(e.target.value)}
+              // onClear={() => setEmail("")}
             />
           ) : (
             <Input
@@ -157,8 +157,8 @@ const AuthForm = () => {
               type="string"
               placeholder="Enter your number"
               value={number}
-              onChange={(e) => setNumber(e.target.value)}
-              onClear={() => setNumber(null)}
+              // onChange={(e) => setNumber(e.target.value)}
+              // onClear={() => setNumber(null)}
             />
           )}
           <p className="text-small text-center text-secondary px-10 2xl:mb-8 mb-0 translate-y-[-8px] 2xl:translate-y-0">
