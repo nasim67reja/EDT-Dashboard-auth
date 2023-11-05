@@ -21,69 +21,56 @@ const AuthForm = () => {
     username: "",
   });
 
-  const continueHandler = (values) => {
-    // Continue with email/ mobile  api caller function
-    const verifyIdentity = async () => {
-      setIsLoading(true);
-      try {
-        const url = `${baseURL}/dev/auth/authentication/signin-passwordless`;
-        const data = {
-          emailOrPhone: emailIsActive ? values.email : values.number,
-          medium: emailIsActive ? "email" : "phone",
-        };
-        const response = await axios.post(url, data);
-        setIsContinue(true); // next step will occur
+  const handleApiCall = async (url, data, successCallback) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(url, data);
+
+      if (response.status === 200) {
+        successCallback(response.data);
         setError("");
-        setAuthData({
-          session: response.data.data.Session,
-          username: response.data.data.ChallengeParameters.USERNAME,
-        });
-      } catch (error) {
-        // Handle errors
-        console.error("Error:", error);
-        setError(error.response.data.message || "something went wrong");
+      } else {
+        // Handle unexpected status codes or errors
+        console.error("Unexpected response status:", response.status);
+        setError("Unexpected error occurred");
       }
-      setIsLoading(false);
+    } catch (error) {
+      // Handle errors
+      console.error("Error:", error);
+      setError(error.response?.data?.message || "Something went wrong");
+    }
+    setIsLoading(false);
+  };
+
+  const continueHandler = (values) => {
+    const url = `${baseURL}/dev/auth/authentication/signin-passwordless`;
+    const data = {
+      emailOrPhone: emailIsActive ? values.email : values.number,
+      medium: emailIsActive ? "email" : "phone",
     };
-    verifyIdentity();
+
+    handleApiCall(url, data, (responseData) => {
+      setIsContinue(true); // next step will occur
+      setAuthData({
+        session: responseData.data.Session,
+        username: responseData.data.ChallengeParameters.USERNAME,
+      });
+    });
   };
 
   const loginHandler = (values) => {
-    console.log(values, "values");
-    // actual login api caller
-    const logIn = async () => {
-      setIsLoading(true);
-      try {
-        const url = `${baseURL}/dev/auth/authentication/otp-passwordless`;
-
-        const data = {
-          challengeName: "CUSTOM_CHALLENGE",
-          otp: values.code,
-          session: authData.session,
-          username: authData.username,
-        };
-
-        const response = await axios.post(url, data);
-
-        // Handle the response as needed
-        console.log("Response:", response.data);
-        setError("");
-
-        // Cookies.set("accessToken", response.data.data.accessToken);
-
-        // Use localStorage to store the accessToken
-        localStorage.setItem("accessToken", response.data.data.accessToken);
-
-        window.location.href = "/";
-      } catch (error) {
-        // Handle errors
-        console.error("Error:", error);
-        setError(error.response.data.message || "something went wrong");
-      }
-      setIsLoading(false);
+    const url = `${baseURL}/dev/auth/authentication/otp-passwordless`;
+    const data = {
+      challengeName: "CUSTOM_CHALLENGE",
+      otp: values.code,
+      session: authData.session,
+      username: authData.username,
     };
 
-    logIn();
+    handleApiCall(url, data, (responseData) => {
+      localStorage.setItem("accessToken", responseData.data.accessToken);
+      window.location.href = "/";
+    });
   };
 
   return (
