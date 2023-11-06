@@ -1,11 +1,12 @@
 import axios from "axios";
+import { generateErrorMessage } from "./Error";
 
 const handleApiCall = async (
   url,
   data,
   successCallback,
   setIsLoading,
-  setError
+  setErrors
 ) => {
   setIsLoading(true);
   try {
@@ -13,16 +14,17 @@ const handleApiCall = async (
 
     if (response.status === 200) {
       successCallback(response.data);
-      setError("");
+      setErrors("");
     } else {
       // Handle unexpected status codes or errors
       console.error("Unexpected response status:", response.status);
-      setError("Unexpected error occurred");
+      setErrors(generateErrorMessage({ response }));
     }
   } catch (error) {
     // Handle errors
     console.error("Error:", error);
-    setError(error.response?.data?.message || "Something went wrong");
+    console.log(generateErrorMessage(error));
+    setErrors(generateErrorMessage(error));
   }
   setIsLoading(false);
 };

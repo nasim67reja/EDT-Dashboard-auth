@@ -12,7 +12,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { MyTextInput } from "../../components/common/inputs/Input";
 
-const LogIn = () => {
+const Auth = () => {
   const [emailIsActive, setEmailIsActive] = useState(true);
   const [isContinue, setIsContinue] = useState(false);
 
@@ -26,27 +26,7 @@ const LogIn = () => {
   });
 
   /// Continue with email or Phone number
-  const continueHandler = (values) => {
-    if (emailIsActive) {
-      if (!values.email) {
-        setEmailOrPhonError("Required");
-        return;
-      } else if (
-        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-      ) {
-        setEmailOrPhonError("Invalid email address");
-        return;
-      }
-    } else {
-      if (!values.number) {
-        setEmailOrPhonError("Required");
-        return;
-      } else if (!/^\+88\d{11}$/.test(values.number)) {
-        setEmailOrPhonError("Must start with +88 and be 14 characters long");
-        return;
-      }
-    }
-
+  const continueHandler = (values, { setStatus, setErrors }) => {
     const url = `${baseURL}/dev/auth/authentication/signin-passwordless`;
     const data = {
       emailOrPhone: emailIsActive ? values.email : values.number,
@@ -112,12 +92,8 @@ const LogIn = () => {
               initialValues={{
                 email: emailIsActive ? "" : "",
                 number: emailIsActive ? "" : "",
-                code: "",
               }}
               validationSchema={Yup.object({
-                code: Yup.string()
-                  .matches(/^[0-9]{6}$/, "Must be exactly 6 digits long")
-                  .required("Required"),
                 email: emailIsActive
                   ? Yup.string()
                       .email("Invalid email address")
@@ -132,14 +108,10 @@ const LogIn = () => {
                       )
                       .required("Required"),
               })}
-              onSubmit={(values, { setSubmitting }) => {
-                // Continue with your form submission logic
+              onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
                 console.log("values", values);
-
-                loginHandler(values);
-
+                continueHandler(values, { setStatus, setErrors });
                 setTimeout(() => {
-                  // alert(JSON.stringify(values, null, 2));
                   setSubmitting(false);
                 }, 400);
               }}
@@ -177,19 +149,50 @@ const LogIn = () => {
                     />
                   )}
 
-                  {!isContinue ? (
+                  {!isContinue && (
                     <>
                       <Button
-                        onClick={() => {
-                          continueHandler(values, { setFieldError });
-                        }}
+                        type="submit"
                         loading={isLoading}
                         className="w-full"
                       >
                         Continue with {emailIsActive ? "email" : "Number"}
                       </Button>
                     </>
-                  ) : (
+                  )}
+                </Form>
+              )}
+            </Formik>
+          </>
+
+          <>
+            <Formik
+              initialValues={{
+                code: "",
+              }}
+              validationSchema={Yup.object({
+                code: Yup.string()
+                  .matches(/^[0-9]{6}$/, "Must be exactly 6 digits long")
+                  .required("Required"),
+              })}
+              onSubmit={(values, { setSubmitting }) => {
+                console.log("values", values);
+                loginHandler(values);
+                setTimeout(() => {
+                  setSubmitting(false);
+                }, 400);
+              }}
+            >
+              {({
+                setFieldValue,
+                setFieldTouched,
+                setFieldError,
+                values,
+                errors,
+                touched,
+              }) => (
+                <Form className="flex flex-col items-center gap-4">
+                  {isContinue && (
                     <>
                       <p className="text-small text-center text-secondary px-10 2xl:mb-8 mb-0 translate-y-[-8px] 2xl:translate-y-0">
                         We just sent a temporary sign up code/Link. Please check
@@ -216,7 +219,6 @@ const LogIn = () => {
               )}
             </Formik>
           </>
-
           {/*  */}
           <div className="my-[2rem] 2xl:my-[3rem] flex gap-4 items-center">
             <div className=" w-[45%] h-[1px] bg-[#AAAAAA]"></div>
@@ -257,4 +259,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default Auth;

@@ -1,4 +1,9 @@
 export const generateErrorMessage = (error) => {
+  if (error.response?.data.code === "INVALID_CODE")
+    return "Your Given Otp Is Not Correct";
+  else if (error.response?.data.code === "RETRY_OTP")
+    return "Your have Given an incorrect otp";
+
   const serverErrorCode = error.response?.status;
 
   const errorMessages = {
