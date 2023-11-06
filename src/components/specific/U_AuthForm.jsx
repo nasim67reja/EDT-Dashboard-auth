@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { MyTextInput } from "../common/inputs/Input";
@@ -8,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { baseURL } from "../common/utils/URL";
-import { generateErrorMessage } from "../common/utils/Error";
+import handleApiCall from "../common/utils/HandleApiCall";
 
 const AuthForm = () => {
   const [emailIsActive, setEmailIsActive] = useState(true);
@@ -22,27 +21,7 @@ const AuthForm = () => {
     username: "",
   });
 
-  const handleApiCall = async (url, data, successCallback) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(url, data);
-
-      if (response.status === 200) {
-        successCallback(response.data);
-        setError("");
-      } else {
-        // Handle unexpected status codes or errors
-        console.error("Unexpected response status:", response.status);
-        setError("Unexpected error occurred");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      // Generate relevant error message
-      setError(generateErrorMessage(error));
-    }
-    setIsLoading(false);
-  };
-
+  /// Continue with email or Phone number
   const continueHandler = (values) => {
     const url = `${baseURL}/dev/auth/authentication/signin-passwordless`;
     const data = {
@@ -50,15 +29,22 @@ const AuthForm = () => {
       medium: emailIsActive ? "email" : "phone",
     };
 
-    handleApiCall(url, data, (responseData) => {
-      setIsContinue(true); // next step will occur
-      setAuthData({
-        session: responseData.data.Session,
-        username: responseData.data.ChallengeParameters.USERNAME,
-      });
-    });
+    handleApiCall(
+      url,
+      data,
+      (responseData) => {
+        setIsContinue(true); // next step will occur
+        setAuthData({
+          session: responseData.data.Session,
+          username: responseData.data.ChallengeParameters.USERNAME,
+        });
+      },
+      setIsLoading,
+      setError
+    );
   };
 
+  //// Actual login using the server response's code
   const loginHandler = (values) => {
     const url = `${baseURL}/dev/auth/authentication/otp-passwordless`;
     const data = {
@@ -68,10 +54,16 @@ const AuthForm = () => {
       username: authData.username,
     };
 
-    handleApiCall(url, data, (responseData) => {
-      localStorage.setItem("accessToken", responseData.data.accessToken);
-      window.location.href = "/";
-    });
+    handleApiCall(
+      url,
+      data,
+      (responseData) => {
+        localStorage.setItem("accessToken", responseData.data.accessToken);
+        window.location.href = "/";
+      },
+      setIsLoading,
+      setError
+    );
   };
 
   return (

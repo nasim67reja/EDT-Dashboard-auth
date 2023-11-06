@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import Button from "../../components/common/inputs/Button";
+import Button from "../common/inputs/Button";
 import { AiFillCloseCircle } from "react-icons/ai";
 
 // Without using YUP
