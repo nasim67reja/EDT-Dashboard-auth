@@ -191,10 +191,10 @@ const Auth = () => {
                 errors,
                 touched,
               }) => (
-                <Form className="flex flex-col items-center gap-4">
+                <Form className="flex flex-col items-center gap-2 mt-3">
                   {isContinue && (
                     <>
-                      <p className="text-small text-center text-secondary px-10 2xl:mb-8 mb-0 translate-y-[-8px] 2xl:translate-y-0">
+                      <p className="text-small text-center text-secondary px-10 2xl:mb-4 mb-0 translate-y-[-8px] 2xl:translate-y-0">
                         We just sent a temporary sign up code/Link. Please check
                         your inbox and paste sign up code below.
                       </p>
