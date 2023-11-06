@@ -25,26 +25,27 @@ const LogIn = () => {
   });
 
   /// Continue with email or Phone number
-  const continueHandler = (values) => {
+  const continueHandler = (values, errors) => {
+    console.log("errors", errors);
     const url = `${baseURL}/dev/auth/authentication/signin-passwordless`;
     const data = {
       emailOrPhone: emailIsActive ? values.email : values.number,
       medium: emailIsActive ? "email" : "phone",
     };
 
-    handleApiCall(
-      url,
-      data,
-      (responseData) => {
-        setIsContinue(true); // next step will occur
-        setAuthData({
-          session: responseData.data.Session,
-          username: responseData.data.ChallengeParameters.USERNAME,
-        });
-      },
-      setIsLoading,
-      setError
-    );
+    // handleApiCall(
+    //   url,
+    //   data,
+    //   (responseData) => {
+    //     setIsContinue(true); // next step will occur
+    //     setAuthData({
+    //       session: responseData.data.Session,
+    //       username: responseData.data.ChallengeParameters.USERNAME,
+    //     });
+    //   },
+    //   setIsLoading,
+    //   setError
+    // );
   };
 
   //// Actual login using the server response's code
@@ -158,7 +159,8 @@ const LogIn = () => {
                     <>
                       <Button
                         onClick={() => {
-                          continueHandler(values);
+                          console.log(errors, "162");
+                          continueHandler(values, errors);
                         }}
                         loading={isLoading}
                         className="w-full"
