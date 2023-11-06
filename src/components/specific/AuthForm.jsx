@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { baseURL } from "../common/utils/URL";
+import { generateErrorMessage } from "../common/utils/Error";
 
 const AuthForm = () => {
   const [emailIsActive, setEmailIsActive] = useState(true);
@@ -36,8 +37,8 @@ const AuthForm = () => {
       }
     } catch (error) {
       console.error("Error:", error);
-      // here need to generate relevant error message
-      setError(error.response?.data?.message || "Something went wrong");
+      // Generate relevant error message
+      setError(generateErrorMessage(error));
     }
     setIsLoading(false);
   };
