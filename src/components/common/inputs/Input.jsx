@@ -38,6 +38,8 @@ export const MyTextInput = ({
       />
 
       {/* Ui error */}
+
+      {<></>}
       {meta.touched && meta.error ? (
         <div className={`text-small text-[#ff0000] mt-1 ${errorClass}`}>
           {meta.error}
@@ -45,7 +47,7 @@ export const MyTextInput = ({
       ) : null}
 
       {/* server error */}
-      {props.error && (
+      {!meta.error && props.error && (
         <p className={`text-small text-[#ff0000] mt-1 ${errorClass}`}>
           {props.error}
         </p>

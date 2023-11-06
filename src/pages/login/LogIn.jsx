@@ -17,7 +17,8 @@ const LogIn = () => {
   const [isContinue, setIsContinue] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [emailOrPhonError, setEmailOrPhonError] = useState("");
+  const [codeError, setCodeError] = useState("");
 
   const [authData, setAuthData] = useState({
     session: "",
@@ -25,27 +26,91 @@ const LogIn = () => {
   });
 
   /// Continue with email or Phone number
-  const continueHandler = (values, errors) => {
-    console.log("errors", errors);
+  // const continueHandler = (values) => {
+  //   if (emailIsActive) {
+  //     if (!values.email) {
+  //       // setEmailOrPhonError("Required");
+  //       return;
+  //     } else if (
+  //       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+  //     ) {
+  //       setEmailOrPhonError("Invalid email address");
+  //       return;
+  //     }
+  //   } else {
+  //     if (!values.number) {
+  //       setEmailOrPhonError("Required");
+  //       return;
+  //     } else if (!/^\+88\d{11}$/.test(values.number)) {
+  //       setEmailOrPhonError("Must start with +88 and be 14 characters long");
+  //       return;
+  //     }
+  //   }
+
+  //   const url = `${baseURL}/dev/auth/authentication/signin-passwordless`;
+  //   const data = {
+  //     emailOrPhone: emailIsActive ? values.email : values.number,
+  //     medium: emailIsActive ? "email" : "phone",
+  //   };
+
+  //   handleApiCall(
+  //     url,
+  //     data,
+  //     (responseData) => {
+  //       setIsContinue(true); // next step will occur
+  //       setAuthData({
+  //         session: responseData.data.Session,
+  //         username: responseData.data.ChallengeParameters.USERNAME,
+  //       });
+  //     },
+  //     setIsLoading,
+  //     setEmailOrPhonError
+  //   );
+  // };
+
+  const continueHandler = async (values, { setFieldError }) => {
+    if (emailIsActive) {
+      if (!values.email) {
+        setFieldError("email", "Required");
+        return;
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+      ) {
+        setFieldError("email", "Invalid email address");
+        return;
+      }
+    } else {
+      if (!values.number) {
+        setFieldError("number", "Required");
+        return;
+      } else if (!/^\+88\d{11}$/.test(values.number)) {
+        setFieldError(
+          "number",
+          "Must start with +88 and be 14 characters long"
+        );
+        return;
+      }
+    }
+
     const url = `${baseURL}/dev/auth/authentication/signin-passwordless`;
     const data = {
       emailOrPhone: emailIsActive ? values.email : values.number,
       medium: emailIsActive ? "email" : "phone",
     };
 
-    // handleApiCall(
-    //   url,
-    //   data,
-    //   (responseData) => {
-    //     setIsContinue(true); // next step will occur
-    //     setAuthData({
-    //       session: responseData.data.Session,
-    //       username: responseData.data.ChallengeParameters.USERNAME,
-    //     });
-    //   },
-    //   setIsLoading,
-    //   setError
-    // );
+    handleApiCall(
+      url,
+      data,
+      (responseData) => {
+        setIsContinue(true); // next step will occur
+        setAuthData({
+          session: responseData.data.Session,
+          username: responseData.data.ChallengeParameters.USERNAME,
+        });
+      },
+      setIsLoading,
+      setEmailOrPhonError
+    );
   };
 
   //// Actual login using the server response's code
@@ -66,7 +131,7 @@ const LogIn = () => {
         window.location.href = "/";
       },
       setIsLoading,
-      setError
+      setCodeError
     );
   };
 
@@ -126,6 +191,7 @@ const LogIn = () => {
               {({
                 setFieldValue,
                 setFieldTouched,
+                setFieldError,
                 values,
                 errors,
                 touched,
@@ -139,7 +205,7 @@ const LogIn = () => {
                       placeholder="Enter your email address ..."
                       identifire={isContinue ? null : "Try mobile number"}
                       onclick={() => setEmailIsActive(!emailIsActive)}
-                      error={error}
+                      error={emailOrPhonError}
                       disabled={isContinue}
                     />
                   ) : (
@@ -150,7 +216,7 @@ const LogIn = () => {
                       placeholder="Enter your number"
                       identifire={isContinue ? null : "Try email"}
                       onclick={() => setEmailIsActive(!emailIsActive)}
-                      error={error}
+                      error={emailOrPhonError}
                       disabled={isContinue}
                     />
                   )}
@@ -159,8 +225,15 @@ const LogIn = () => {
                     <>
                       <Button
                         onClick={() => {
-                          console.log(errors, "162");
-                          continueHandler(values, errors);
+                          console.log(
+                            setFieldValue,
+                            setFieldTouched,
+                            setFieldError,
+                            values,
+                            errors,
+                            touched
+                          );
+                          continueHandler(values, { setFieldError });
                         }}
                         loading={isLoading}
                         className="w-full"
@@ -180,7 +253,7 @@ const LogIn = () => {
                         name="code"
                         type="string"
                         placeholder="Enter your code"
-                        error={error}
+                        error={codeError}
                       />
                       <Button
                         loading={isLoading}
