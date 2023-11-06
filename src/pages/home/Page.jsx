@@ -1,13 +1,14 @@
 import React from "react";
 import { FaSearch, FaHome, FaChartBar, FaCog } from "react-icons/fa";
-import Button from "../../components/common/inputs/Button";
+// import Button from "../../components/common/inputs/Button";
+import { Outlet } from "react-router-dom";
 // import Cookies from "js-cookie";
 
 const Dashboard = () => {
   return (
-    <div className="grid grid-cols-[25%_75%] min-h-screen">
+    <div className="grid grid-cols-[25%_75%] bg-[#FBFBFB]">
       {/* Sidebar */}
-      <div className="bg-gray-800 text-white flex flex-col px-8 py-4 bg-bgPrimary w-full">
+      <div className="bg-gray-800 text-white flex flex-col px-8 py-4 h-screen overflow-auto w-full">
         <h1 className="heading-secondary mb-16">Logo</h1>
         {/* Sidebar Icons and Text */}
         {arr.map((el, i) => (
@@ -16,7 +17,7 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col overflow-hidden px-8">
+      <div className=" h-screen overflow-auto  flex flex-col">
         {/* Navbar */}
         <nav className="bg-white border-b p-4">
           <div className="flex items-center justify-between">
@@ -42,24 +43,7 @@ const Dashboard = () => {
           </div>
         </nav>
 
-        {/* Main Content Area */}
-        <div className="center h-full">
-          <div className="flex flex-col items-center ">
-            <h1 className="text-2xl font-bold mb-4">
-              Welcome to the Dashboard!
-            </h1>
-            <p className="mb-8">You are logged in to the dashboard</p>
-
-            <Button
-              onClick={() => {
-                localStorage.removeItem("accessToken");
-                window.location.reload();
-              }}
-            >
-              Log Out
-            </Button>
-          </div>
-        </div>
+        <Outlet />
       </div>
     </div>
   );
