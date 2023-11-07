@@ -12,7 +12,9 @@
 body {
   font-family: "Roboto", sans-serif;
 }
-
+.roboto {
+  font-family: "Roboto", sans-serif;
+}
 /* Tailwind custom classes */
 .center {
   @apply flex justify-center items-center;
@@ -33,5 +35,12 @@ body {
 .heading-tertiary {
   @apply text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] 2xl:text-[28px] text-[#141B34];
 }
-
+.heading-four {
+}
+.error {
+  @apply text-small text-[#ff0000];
+}
 /* some other classes */
+.antialiased {
+  padding: 0 !important;
+}

@@ -32,7 +32,7 @@ export function DialogC({ header, body }) {
       >
         {header && <DialogHeader>{header}</DialogHeader>}
         <DialogBody>{body}</DialogBody>
-        <DialogFooter>
+        {/* <DialogFooter>
           <Button
             variant="text"
             color="red"
@@ -42,9 +42,9 @@ export function DialogC({ header, body }) {
             <span>Cancel</span>
           </Button>
           <Button variant="gradient" color="green" onClick={handleOpen}>
-            <span>Confirm</span>
+            <span>Save and continue</span>
           </Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </Dialog>
     </>
   );
