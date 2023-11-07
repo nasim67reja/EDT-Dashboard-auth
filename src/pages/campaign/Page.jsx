@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Button from "../../components/common/inputs/Button";
 import sad from "../../assets/campaign/sad.svg";
 import { DialogC } from "../../components/common/feedback/Dialog";
@@ -13,11 +13,21 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import {
+  affiliationOption,
+  officeSoughtOption,
+  participantOption,
+  years,
+} from "../../components/common/utils/Data";
 
 const Page = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [submitCampaignOpen, setSubmitCampaignOpen] = useState(false);
 
   const handleOpen = () => setOpen(!open);
+  const handleOpenSubmitCampaignOpen = () =>
+    setSubmitCampaignOpen(!submitCampaignOpen);
+
   return (
     <div className="px-[4rem] py-10 flex-1 flex flex-col">
       <h3 className="heading-tertiary font-bold pb-10 border-b border-[#DDDDE0]">
@@ -44,10 +54,86 @@ const Page = () => {
             className="border"
           >
             <DialogBody>
-              <CreateCampaing handler={handleOpen} />
+              <CreateCampaing
+                handler={handleOpen}
+                handlerSubmit={handleOpenSubmitCampaignOpen}
+              />
             </DialogBody>
           </Dialog>
-          <SubmitCampaign />
+          {/* Submit Campaign */}
+
+          <>
+            <Dialog
+              size="sm"
+              open={submitCampaignOpen}
+              handler={handleOpenSubmitCampaignOpen}
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0.9, y: -100 },
+              }}
+            >
+              <DialogBody>
+                <div className="pt-10 px-8 pb-2">
+                  <h4 className="text-large text-[#202020] font-semibold mb-6 ">
+                    Do you accept financial Authority and Responsibility?
+                  </h4>
+                  <div className=" flex flex-col gap-4">
+                    <label className="flex items-center gap-4">
+                      <input
+                        type="radio"
+                        name="authority"
+                        value="yes"
+                        checked
+                        className=" w-5 h-5 cursor-pointer"
+                      />
+                      <div>
+                        <p className="text-[16px] font-semibold text-[#202020]">
+                          Yes, I affirm that i am the account owner
+                        </p>
+                        <p className="text-small text-secondary">
+                          I am legally and financially responsible for this
+                          organization.
+                        </p>
+                      </div>
+                    </label>
+                    <label className="flex items-center gap-4">
+                      <input
+                        type="radio"
+                        name="authority"
+                        value="no"
+                        className=" w-5 h-5 cursor-pointer"
+                      />
+                      <div>
+                        <p className="text-[16px] font-semibold text-[#202020]">
+                          No, I am not the account owner
+                        </p>
+                        <p className="text-small text-secondary">
+                          I Will invite the appropriate person for authorization
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </DialogBody>
+              <DialogFooter>
+                <div className="flex flex-col w-full gap-2 px-8">
+                  <Button
+                    className="w-full"
+                    onClick={handleOpenSubmitCampaignOpen}
+                  >
+                    Submit campaign
+                  </Button>
+                  <Button
+                    className="w-full !bg-bgPrimary"
+                    textColor="#202020"
+                    onClick={handleOpenSubmitCampaignOpen}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </DialogFooter>
+            </Dialog>
+          </>
         </div>
       </div>
     </div>
@@ -91,7 +177,7 @@ const FileUpload = ({ label, fileRef, ...props }) => {
   );
 };
 
-const CreateCampaing = ({ handler }) => {
+const CreateCampaing = ({ handler, handlerSubmit }) => {
   const fileRef = useRef(null);
   return (
     <div>
@@ -104,8 +190,15 @@ const CreateCampaing = ({ handler }) => {
             occupation: "",
             voterID: "",
             address: "",
+            officeSought: "",
             district: "",
-            files: "",
+            constituency: "",
+            year: "",
+            campaignName: "",
+            affiliation: "",
+            participant: "",
+            campaignDate: "",
+            // files: "",
           }}
           validationSchema={Yup.object({
             name: Yup.string()
@@ -135,43 +228,72 @@ const CreateCampaing = ({ handler }) => {
                 "Invalid district"
               )
               .required("Required"),
-            files: Yup.mixed()
-              .test("is-file-too-big", "File exceeds 10MB", () => {
-                let valid = true;
-                const files = fileRef?.current?.files;
-                if (files) {
-                  const fileArr = Array.from(files);
-                  fileArr.forEach((file) => {
-                    const size = file.size / 1024 / 1024;
-                    if (size > 10) {
-                      valid = false;
-                    }
-                  });
-                }
-                return valid;
-              })
-              .test(
-                "is-file-of-correct-type",
-                "File is not of supported type",
-                () => {
-                  let valid = true;
-                  const files = fileRef?.current?.files;
-                  if (files) {
-                    const fileArr = Array.from(files);
-                    fileArr.forEach((file) => {
-                      const type = file.type.split("/")[1];
-                      const validTypes = ["png", "jpg"];
-                      if (!validTypes.includes(type)) {
-                        valid = false;
-                      }
-                    });
-                  }
-                  return valid;
-                }
+            officeSought: Yup.string()
+              .oneOf(
+                officeSoughtOption.map((option) => option.value),
+                "Invalid office sought"
               )
               .required("Required"),
+            year: Yup.string()
+              .oneOf(
+                years.map((option) => option.value),
+                "Invalid Year"
+              )
+              .required("Required"),
+            campaignName: Yup.string()
+              .max(15, "Must be 15 characters or less")
+              .required("Required"),
+            affiliation: Yup.string()
+              .oneOf(
+                affiliationOption.map((option) => option.value),
+                "Invalid Affiliation"
+              )
+              .required("Required"),
+            participant: Yup.string()
+              .oneOf(
+                participantOption.map((option) => option.value),
+                "Invalid Participant"
+              )
+              .required("Required"),
+            // files: Yup.mixed()
+            //   .test("is-file-too-big", "File exceeds 10MB", () => {
+            //     let valid = true;
+            //     const files = fileRef?.current?.files;
+            //     if (files) {
+            //       const fileArr = Array.from(files);
+            //       fileArr.forEach((file) => {
+            //         const size = file.size / 1024 / 1024;
+            //         if (size > 10) {
+            //           valid = false;
+            //         }
+            //       });
+            //     }
+            //     return valid;
+            //   })
+            //   .test(
+            //     "is-file-of-correct-type",
+            //     "File is not of supported type",
+            //     () => {
+            //       let valid = true;
+            //       const files = fileRef?.current?.files;
+            //       if (files) {
+            //         const fileArr = Array.from(files);
+            //         fileArr.forEach((file) => {
+            //           const type = file.type.split("/")[1];
+            //           const validTypes = ["png", "jpg"];
+            //           if (!validTypes.includes(type)) {
+            //             valid = false;
+            //           }
+            //         });
+            //       }
+            //       return valid;
+            //     }
+            //   )
+            //   .required("Required"),
           })}
-          onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
+          onSubmit={(values, { setSubmitting }) => {
+            handlerSubmit();
+            handler();
             console.log("values", values);
             setTimeout(() => {
               setSubmitting(false);
@@ -199,12 +321,13 @@ const CreateCampaing = ({ handler }) => {
                 </div>
               ))}
               <div className="flex justify-center items-center gap-6 w-full">
-                <MySelect label="Office sought" name="district">
-                  <option value="">Mayor</option>
-                  <option value="New York">New York</option>
-                  <option value="Washintong">Washintong</option>
-                  <option value="Los angels">Los angels</option>
-                  <option value="other">Other</option>
+                <MySelect label="Office sought" name="officeSought">
+                  <option value="">Select an option</option>
+                  {officeSoughtOption.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </MySelect>
 
                 <MySelect label="District" name="district">
@@ -224,38 +347,41 @@ const CreateCampaing = ({ handler }) => {
                   <option value="other">Other</option>
                 </MySelect>
 
-                <MySelect label="Year" name="district">
-                  <option value="">2024</option>
-                  <option value="New York">New York</option>
-                  <option value="Washintong">Washintong</option>
-                  <option value="Los angels">Los angels</option>
-                  <option value="other">Other</option>
+                <MySelect label="Year" name="year">
+                  <option value="">-None_</option>
+                  {years.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </MySelect>
               </div>
               <div className="flex justify-center items-center gap-6 w-full">
                 <MyTextInput
                   label="Campaign name"
-                  name="name"
+                  name="campaignName"
                   type="string"
                   placeholder="All Councill Districts"
                   inputClass="!py-2 !mt-0 text-black"
                   labelClass="!text-[14px]"
                 />
-                <MySelect label="Affiliation" name="district">
-                  <option value="">Republican</option>
-                  <option value="New York">New York</option>
-                  <option value="Washintong">Washintong</option>
-                  <option value="Los angels">Los angels</option>
-                  <option value="other">Other</option>
+                <MySelect label="Affiliation" name="affiliationOption">
+                  <option value="">Select an option</option>
+                  {affiliationOption.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </MySelect>
               </div>
               <div className="flex justify-center items-center gap-6 w-full">
-                <MySelect label="Participant" name="district">
+                <MySelect label="Participant" name="participant">
                   <option value="">-None_</option>
-                  <option value="New York">New York</option>
-                  <option value="Washintong">Washintong</option>
-                  <option value="Los angels">Los angels</option>
-                  <option value="other">Other</option>
+                  {participantOption.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </MySelect>
 
                 <MySelect label="Year" name="district">
@@ -278,8 +404,12 @@ const CreateCampaing = ({ handler }) => {
               >
                 <span>Cancel</span>
               </Button>
-              <Button className=" !py-[10.5px] !px-4" type="submit">
-                <span>Save and continue</span>
+              <Button
+                // onClick={handlerSubmit}
+                className=" !py-[10.5px] !px-4"
+                type="submit"
+              >
+                Save and continue
               </Button>
             </div>
           </Form>
@@ -328,93 +458,8 @@ const InputField = [
   ],
 ];
 
-const SubmitCampaign = () => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => setOpen(!open);
-  return (
-    <>
-      <>
-        <Button
-          className="rounded-md !px-4 !py-[10px] text-large"
-          onClick={handleOpen}
-        >
-          Add Campaign +
-        </Button>
-        <Dialog
-          size="sm"
-          open={open}
-          handler={handleOpen}
-          animate={{
-            mount: { scale: 1, y: 0 },
-            unmount: { scale: 0.9, y: -100 },
-          }}
-        >
-          <DialogBody>
-            <div className="pt-10 px-8 pb-2">
-              <h4 className="text-large text-[#202020] font-semibold mb-6 ">
-                Do you accept financial Authority and Responsibility?
-              </h4>
-              <div className=" flex flex-col gap-4">
-                <label className="flex items-center gap-4">
-                  <input
-                    type="radio"
-                    name="authority"
-                    value="yes"
-                    checked
-                    className=" w-5 h-5 cursor-pointer"
-                  />
-                  <div>
-                    <p className="text-[16px] font-semibold text-[#202020]">
-                      Yes, I affirm that i am the account owner
-                    </p>
-                    <p className="text-small text-secondary">
-                      I am legally and financially responsible for this
-                      organization.
-                    </p>
-                  </div>
-                </label>
-                <label className="flex items-center gap-4">
-                  <input
-                    type="radio"
-                    name="authority"
-                    value="no"
-                    className=" w-5 h-5 cursor-pointer"
-                  />
-                  <div>
-                    <p className="text-[16px] font-semibold text-[#202020]">
-                      No, I am not the account owner
-                    </p>
-                    <p className="text-small text-secondary">
-                      I Will invite the appropriate person for authorization
-                    </p>
-                  </div>
-                </label>
-              </div>
-            </div>
-          </DialogBody>
-          <DialogFooter>
-            <div className="flex flex-col w-full gap-2 px-8">
-              <Button className="w-full" onClick={handleOpen}>
-                Submit campaign
-              </Button>
-              <Button
-                className="w-full !bg-bgPrimary"
-                textColor="#202020"
-                onClick={handleOpen}
-              >
-                Cancel
-              </Button>
-            </div>
-          </DialogFooter>
-        </Dialog>
-      </>
-    </>
-  );
-};
-
 export function ImageUpload() {
-  const [images, setImages] = React.useState([]);
+  const [images, setImages] = useState([]);
   const maxNumber = 69;
 
   const onChange = (imageList, addUpdateIndex) => {
@@ -423,6 +468,7 @@ export function ImageUpload() {
     setImages(imageList);
   };
 
+  console.log(images, "images");
   return (
     <div className=" w-full">
       <ImageUploading
@@ -454,6 +500,7 @@ export function ImageUpload() {
               onClick={onImageUpload}
               {...dragProps}
               className="w-full flex flex-col items-center gap-1 border p-6 border-dashed border-[#141B34] bg-[#FBFBFB]"
+              type="button"
             >
               <img src={cloudImage} alt="" />
               <p className="text-large font-medium text-[#202020]">

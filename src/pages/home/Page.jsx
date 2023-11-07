@@ -1,7 +1,7 @@
 import React from "react";
 import { FaSearch, FaHome, FaChartBar, FaCog } from "react-icons/fa";
 // import Button from "../../components/common/inputs/Button";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 // import Cookies from "js-cookie";
 
 const Dashboard = () => {
@@ -56,23 +56,28 @@ const SideBarLink = ({ el }) => {
     <div className="my-4 flex items-center gap-4 cursor-pointer">
       {/* <FaHome size={18} /> */}
       {el.icon}
-      <span className="text-xs">{el.text}</span>
+      <Link to={el.link}>
+        <span className="text-xs">{el.text}</span>
+      </Link>
     </div>
   );
 };
 const arr = [
   {
     text: "Home",
+    link: "/",
     icon: <FaHome size={18} />,
   },
 
   {
-    text: "Home",
+    text: "Campaign",
+    link: "/campaign",
     icon: <FaCog size={18} />,
   },
 
   {
     text: "Settings",
+    link: "/campaign",
     icon: <FaChartBar size={18} />,
   },
 ];
