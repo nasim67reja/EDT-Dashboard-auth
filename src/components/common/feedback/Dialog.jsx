@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import Button from "../inputs/Button";
 
-export function DialogCustomAnimation() {
+export function DialogC({ header, body }) {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(!open);
@@ -29,32 +29,8 @@ export function DialogCustomAnimation() {
           unmount: { scale: 0.9, y: -100 },
         }}
       >
-        <DialogHeader>Its a simple dialog.</DialogHeader>
-        <DialogBody>
-          The key to more success is to have a lot of pillows. Put it this way,
-          it took me twenty five years to get these plants, twenty five years of
-          blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-          getting started. I&apos;m up to something. Fan luv. The key to more
-          success is to have a lot of pillows. Put it this way, it took me
-          twenty five years to get these plants, twenty five years of blood
-          sweat and tears, and I&apos;m never giving up, I&apos;m just getting
-          started. I&apos;m up to something. Fan luv. The key to more success is
-          to have a lot of pillows. Put it this way, it took me twenty five
-          years to get these plants, twenty five years of blood sweat and tears,
-          and I&apos;m never giving up, I&apos;m just getting started. I&apos;m
-          up to something. Fan luv. The key to more success is to have a lot of
-          pillows. Put it this way, it took me twenty five years to get these
-          plants, twenty five years of blood sweat and tears, and I&apos;m never
-          giving up, I&apos;m just getting started. I&apos;m up to something.
-          Fan luv. The key to more success is to have a lot of pillows. Put it
-          this way, it took me twenty five years to get these plants, twenty
-          five years of blood sweat and tears, and I&apos;m never giving up,
-          I&apos;m just getting started. I&apos;m up to something. Fan luv. The
-          key to more success is to have a lot of pillows. Put it this way, it
-          took me twenty five years to get these plants, twenty five years of
-          blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-          getting started. I&apos;m up to something. Fan luv.
-        </DialogBody>
+        {header && <DialogHeader>{header}</DialogHeader>}
+        <DialogBody>{body}</DialogBody>
         <DialogFooter>
           <Button
             variant="text"
