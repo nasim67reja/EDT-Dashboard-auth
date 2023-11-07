@@ -1,0 +1,21 @@
+{
+  "campaign_name": "test test test",
+  "office_sought": "Assistant",
+  "participant": "P-B",
+  "start_date": "2023-10-29",
+  "end_date": "2023-11-6",
+  "campaign_status": "upcoming",
+  "candidacy_year": "2024",
+  "constituency": "New york",
+  "affiliation": "Conservative",
+  "candidate_name": "Mr Candidate",
+  "phone": "1293142198413",
+  "email": "email@gmail.com",
+  "voter_id": "323r2545354",
+  "address": "aeffe",
+  "district": "New york",
+  "owner_id": "11cfffacfea43fbd9591c2af64cb8a00116133c9",
+  "is_owner": false,
+  "occupation": "Lawyer",
+  "campaign_image": ""
+}

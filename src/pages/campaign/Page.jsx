@@ -17,16 +17,58 @@ import {
   affiliationOption,
   officeSoughtOption,
   participantOption,
+  usaMajorDistricts,
   years,
 } from "../../components/common/utils/Data";
+import { baseURL } from "../../components/common/utils/URL";
+import axios from "axios";
 
 const Page = () => {
+  const [formData, setFormData] = useState();
   const [open, setOpen] = useState(false);
   const [submitCampaignOpen, setSubmitCampaignOpen] = useState(false);
 
   const handleOpen = () => setOpen(!open);
   const handleOpenSubmitCampaignOpen = () =>
     setSubmitCampaignOpen(!submitCampaignOpen);
+
+  console.log(formData, "formdata");
+
+  const createCampaignHandler = async () => {
+    // handleOpenSubmitCampaignOpen();
+    setFormData({
+      ...formData,
+      start_date: "2023-10-29",
+      end_date: "2023-11-6",
+      campaign_status: "upcoming",
+      owner_id: "11cfffacfea43fbd9591c2af64cb8a00116133c9",
+      is_owner: false,
+    });
+
+    const createCampaignURL = `${baseURL}/campaign/create_campaign`;
+
+    // Get the id_token from localStorage
+    const idToken = localStorage.getItem("idToken");
+
+    // Set up the headers with the id_token
+    const headers = {
+      Authorization: `Bearer ${idToken}`,
+      "Content-Type": "application/json",
+    };
+
+    try {
+      // Make the POST request
+      const response = await axios.post(createCampaignURL, formData, {
+        headers,
+      });
+
+      // Handle the response
+      console.log("Campaign created successfully:", response.data);
+    } catch (error) {
+      // Handle errors
+      console.error("Error creating campaign:", error.message);
+    }
+  };
 
   return (
     <div className="px-[4rem] py-10 flex-1 flex flex-col">
@@ -37,105 +79,106 @@ const Page = () => {
         <div className="flex flex-col items-center gap-4">
           <img src={sad} className="border-b border-[#DDDDE0]" alt="" />
           <p className="text-large text-secondary">No campaign available</p>
+
+          {/* submit form */}
           <Button
             className="rounded-md !px-4 !py-[10px] text-large"
             onClick={handleOpen}
           >
             Add Campaign +
           </Button>
-          <Dialog
-            size="xl"
-            open={open}
-            handler={handleOpen}
-            animate={{
-              mount: { scale: 1, y: 0 },
-              unmount: { scale: 0.9, y: -100 },
-            }}
-            className="border"
-          >
-            <DialogBody>
-              <CreateCampaing
-                handler={handleOpen}
-                handlerSubmit={handleOpenSubmitCampaignOpen}
-              />
-            </DialogBody>
-          </Dialog>
-          {/* Submit Campaign */}
-
-          <>
-            <Dialog
-              size="sm"
-              open={submitCampaignOpen}
-              handler={handleOpenSubmitCampaignOpen}
-              animate={{
-                mount: { scale: 1, y: 0 },
-                unmount: { scale: 0.9, y: -100 },
-              }}
-            >
-              <DialogBody>
-                <div className="pt-10 px-8 pb-2">
-                  <h4 className="text-large text-[#202020] font-semibold mb-6 ">
-                    Do you accept financial Authority and Responsibility?
-                  </h4>
-                  <div className=" flex flex-col gap-4">
-                    <label className="flex items-center gap-4">
-                      <input
-                        type="radio"
-                        name="authority"
-                        value="yes"
-                        checked
-                        className=" w-5 h-5 cursor-pointer"
-                      />
-                      <div>
-                        <p className="text-[16px] font-semibold text-[#202020]">
-                          Yes, I affirm that i am the account owner
-                        </p>
-                        <p className="text-small text-secondary">
-                          I am legally and financially responsible for this
-                          organization.
-                        </p>
-                      </div>
-                    </label>
-                    <label className="flex items-center gap-4">
-                      <input
-                        type="radio"
-                        name="authority"
-                        value="no"
-                        className=" w-5 h-5 cursor-pointer"
-                      />
-                      <div>
-                        <p className="text-[16px] font-semibold text-[#202020]">
-                          No, I am not the account owner
-                        </p>
-                        <p className="text-small text-secondary">
-                          I Will invite the appropriate person for authorization
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </DialogBody>
-              <DialogFooter>
-                <div className="flex flex-col w-full gap-2 px-8">
-                  <Button
-                    className="w-full"
-                    onClick={handleOpenSubmitCampaignOpen}
-                  >
-                    Submit campaign
-                  </Button>
-                  <Button
-                    className="w-full !bg-bgPrimary"
-                    textColor="#202020"
-                    onClick={handleOpenSubmitCampaignOpen}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </DialogFooter>
-            </Dialog>
-          </>
         </div>
       </div>
+
+      <Dialog
+        size="xl"
+        open={open}
+        handler={handleOpen}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+        className="border"
+      >
+        <DialogBody>
+          <CreateCampaing
+            setFormData={setFormData}
+            handler={handleOpen}
+            handlerSubmit={handleOpenSubmitCampaignOpen}
+          />
+        </DialogBody>
+      </Dialog>
+      {/* Submit Campaign */}
+
+      <>
+        <Dialog
+          size="sm"
+          open={submitCampaignOpen}
+          handler={handleOpenSubmitCampaignOpen}
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0.9, y: -100 },
+          }}
+        >
+          <DialogBody>
+            <div className="pt-10 px-8 pb-2">
+              <h4 className="text-large text-[#202020] font-semibold mb-6 ">
+                Do you accept financial Authority and Responsibility?
+              </h4>
+              <div className=" flex flex-col gap-4">
+                <label className="flex items-center gap-4">
+                  <input
+                    type="radio"
+                    name="authority"
+                    value="yes"
+                    checked
+                    className=" w-5 h-5 cursor-pointer"
+                  />
+                  <div>
+                    <p className="text-[16px] font-semibold text-[#202020]">
+                      Yes, I affirm that i am the account owner
+                    </p>
+                    <p className="text-small text-secondary">
+                      I am legally and financially responsible for this
+                      organization.
+                    </p>
+                  </div>
+                </label>
+                <label className="flex items-center gap-4">
+                  <input
+                    type="radio"
+                    name="authority"
+                    value="no"
+                    className=" w-5 h-5 cursor-pointer"
+                  />
+                  <div>
+                    <p className="text-[16px] font-semibold text-[#202020]">
+                      No, I am not the account owner
+                    </p>
+                    <p className="text-small text-secondary">
+                      I Will invite the appropriate person for authorization
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </DialogBody>
+          <DialogFooter>
+            <div className="flex flex-col w-full gap-2 px-8">
+              <Button className="w-full" onClick={createCampaignHandler}>
+                Submit campaign
+              </Button>
+              <Button
+                className="w-full !bg-bgPrimary"
+                textColor="#202020"
+                onClick={handleOpenSubmitCampaignOpen}
+              >
+                Cancel
+              </Button>
+            </div>
+          </DialogFooter>
+        </Dialog>
+      </>
     </div>
   );
 };
@@ -153,7 +196,7 @@ const MySelect = ({ label, ...props }) => {
         {label}
       </label>
       <select
-        className="border p-[10px]  text-[#000] text-small rounded-lg focus:outline-primary "
+        className="border px-[10px] py-[8px]  text-[#000] text-small rounded-lg focus:outline-primary "
         {...field}
         {...props}
       />
@@ -177,34 +220,34 @@ const FileUpload = ({ label, fileRef, ...props }) => {
   );
 };
 
-const CreateCampaing = ({ handler, handlerSubmit }) => {
-  const fileRef = useRef(null);
+const CreateCampaing = ({ handler, handlerSubmit, setFormData }) => {
+  // const fileRef = useRef(null);
   return (
     <div>
       <>
         <Formik
           initialValues={{
-            name: "",
-            number: "",
+            candidate_name: "",
+            phone: "",
             email: "",
             occupation: "",
-            voterID: "",
+            voter_id: "",
             address: "",
-            officeSought: "",
+            office_sought: "",
             district: "",
             constituency: "",
-            year: "",
-            campaignName: "",
+            candidacy_year: "",
+            campaign_name: "",
             affiliation: "",
             participant: "",
-            campaignDate: "",
+            // campaignDate: "",
             // files: "",
           }}
           validationSchema={Yup.object({
-            name: Yup.string()
+            candidate_name: Yup.string()
               .max(15, "Must be 15 characters or less")
               .required("Required"),
-            number: Yup.string()
+            phone: Yup.string()
               .matches(
                 /^\+88\d{11}$/,
                 "Must start with +88 and be 14 characters long"
@@ -216,31 +259,37 @@ const CreateCampaing = ({ handler, handlerSubmit }) => {
             occupation: Yup.string()
               .max(15, "Must be 15 characters or less")
               .required("Required"),
-            voterID: Yup.string()
+            voter_id: Yup.string()
               .max(16, "Must be 16 characters or less")
               .required("Required"),
             address: Yup.string()
               .max(15, "Must be 15 characters or less")
               .required("Required"),
-            district: Yup.string()
-              .oneOf(
-                ["New York", "Washintong", "Los angels", "other"],
-                "Invalid district"
-              )
-              .required("Required"),
-            officeSought: Yup.string()
+            office_sought: Yup.string()
               .oneOf(
                 officeSoughtOption.map((option) => option.value),
                 "Invalid office sought"
               )
               .required("Required"),
-            year: Yup.string()
+            district: Yup.string()
+              .oneOf(
+                usaMajorDistricts.map((option) => option.value),
+                "Invalid district"
+              )
+              .required("Required"),
+            constituency: Yup.string()
+              .oneOf(
+                usaMajorDistricts.map((option) => option.value),
+                "Invalid district"
+              )
+              .required("Required"),
+            candidacy_year: Yup.string()
               .oneOf(
                 years.map((option) => option.value),
                 "Invalid Year"
               )
               .required("Required"),
-            campaignName: Yup.string()
+            campaign_name: Yup.string()
               .max(15, "Must be 15 characters or less")
               .required("Required"),
             affiliation: Yup.string()
@@ -294,6 +343,7 @@ const CreateCampaing = ({ handler, handlerSubmit }) => {
           onSubmit={(values, { setSubmitting }) => {
             handlerSubmit();
             handler();
+            setFormData({ ...values });
             console.log("values", values);
             setTimeout(() => {
               setSubmitting(false);
@@ -314,14 +364,14 @@ const CreateCampaing = ({ handler, handlerSubmit }) => {
                       name={child.name}
                       type={child.address}
                       placeholder="..."
-                      inputClass="!py-2 !mt-0 text-black"
+                      inputClass="!py-1 !mt-0 text-black"
                       labelClass="!text-[14px]"
                     />
                   ))}
                 </div>
               ))}
               <div className="flex justify-center items-center gap-6 w-full">
-                <MySelect label="Office sought" name="officeSought">
+                <MySelect label="Office sought" name="office_sought">
                   <option value="">Select an option</option>
                   {officeSoughtOption.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -332,22 +382,24 @@ const CreateCampaing = ({ handler, handlerSubmit }) => {
 
                 <MySelect label="District" name="district">
                   <option value="">-None_</option>
-                  <option value="New York">New York</option>
-                  <option value="Washintong">Washintong</option>
-                  <option value="Los angels">Los angels</option>
-                  <option value="other">Other</option>
+                  {usaMajorDistricts.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </MySelect>
               </div>
               <div className="flex justify-center items-center gap-6 w-full">
-                <MySelect label="Constituency" name="district">
-                  <option value="">New York</option>
-                  <option value="New York">New York</option>
-                  <option value="Washintong">Washintong</option>
-                  <option value="Los angels">Los angels</option>
-                  <option value="other">Other</option>
+                <MySelect label="Constituency" name="constituency">
+                  <option value="">Select an option</option>
+                  {usaMajorDistricts.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </MySelect>
 
-                <MySelect label="Year" name="year">
+                <MySelect label="Year" name="candidacy_year">
                   <option value="">-None_</option>
                   {years.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -359,13 +411,13 @@ const CreateCampaing = ({ handler, handlerSubmit }) => {
               <div className="flex justify-center items-center gap-6 w-full">
                 <MyTextInput
                   label="Campaign name"
-                  name="campaignName"
+                  name="campaign_name"
                   type="string"
                   placeholder="All Councill Districts"
-                  inputClass="!py-2 !mt-0 text-black"
+                  inputClass="!py-1 !mt-0 text-black"
                   labelClass="!text-[14px]"
                 />
-                <MySelect label="Affiliation" name="affiliationOption">
+                <MySelect label="Affiliation" name="affiliation">
                   <option value="">Select an option</option>
                   {affiliationOption.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -423,12 +475,12 @@ const InputField = [
   [
     {
       label: "Name",
-      name: "name",
+      name: "candidate_name",
       type: "string",
     },
     {
       label: "Number",
-      name: "number",
+      name: "phone",
       type: "string",
     },
   ],
@@ -447,7 +499,7 @@ const InputField = [
   [
     {
       label: "Voter Id",
-      name: "voterID",
+      name: "voter_id",
       type: "string",
     },
     {

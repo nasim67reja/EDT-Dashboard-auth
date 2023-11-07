@@ -14,6 +14,7 @@ const handleApiCall = async (
 
     if (response.status === 200) {
       successCallback(response.data);
+      console.log(response.data, "login");
       setErrors("");
     } else {
       // Handle unexpected status codes or errors

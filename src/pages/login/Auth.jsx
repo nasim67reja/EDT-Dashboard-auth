@@ -63,7 +63,8 @@ const Auth = () => {
       data,
       (responseData) => {
         localStorage.setItem("accessToken", responseData.data.accessToken);
-        window.location.href = "/";
+        localStorage.setItem("idToken", responseData.data.idToken);
+        // window.location.href = "/";
       },
       setIsLoading,
       setCodeError
