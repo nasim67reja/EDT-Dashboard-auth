@@ -57,18 +57,61 @@ const Page = () => {
     };
 
     try {
-      // Make the POST request
-      const response = await axios.post(createCampaignURL, formData, {
+      // Make the POST request using Fetch
+      const response = await fetch(createCampaignURL, {
+        method: "POST",
         headers,
+        credentials: "include",
+        body: JSON.stringify(formData),
       });
 
+      // Parse the JSON response
+      const responseData = await response.json();
+
       // Handle the response
-      console.log("Campaign created successfully:", response.data);
+      console.log("Campaign created successfully:", responseData);
     } catch (error) {
       // Handle errors
       console.error("Error creating campaign:", error.message);
     }
   };
+
+  // const createCampaignHandler = async () => {
+  //   // handleOpenSubmitCampaignOpen();
+  //   setFormData({
+  //     ...formData,
+  //     start_date: "2023-10-29",
+  //     end_date: "2023-11-6",
+  //     campaign_status: "upcoming",
+  //     owner_id: "11cfffacfea43fbd9591c2af64cb8a00116133c9",
+  //     is_owner: false,
+  //   });
+
+  //   const createCampaignURL = `${baseURL}/dev/campaign/create_campaign`;
+
+  //   // Get the id_token from localStorage
+  //   const idToken = localStorage.getItem("idToken");
+
+  //   // Set up the headers with the id_token
+  //   const headers = {
+  //     Authorization: `Bearer ${idToken}`,
+  //     "Content-Type": "application/json",
+  //   };
+
+  //   try {
+  //     // Make the POST request
+  //     const response = await axios.post(createCampaignURL, formData, {
+  //       headers,
+  //       withCredentials: true,
+  //     });
+
+  //     // Handle the response
+  //     console.log("Campaign created successfully:", response.data);
+  //   } catch (error) {
+  //     // Handle errors
+  //     console.error("Error creating campaign:", error.message);
+  //   }
+  // };
 
   return (
     <div className="px-[4rem] py-10 flex-1 flex flex-col">
