@@ -45,7 +45,7 @@ const Page = () => {
       is_owner: false,
     });
 
-    const createCampaignURL = `${baseURL}/campaign/create_campaign`;
+    const createCampaignURL = `${baseURL}/dev/campaign/create_campaign`;
 
     // Get the id_token from localStorage
     const idToken = localStorage.getItem("idToken");
@@ -72,7 +72,7 @@ const Page = () => {
       console.log("Campaign created successfully:", responseData);
     } catch (error) {
       // Handle errors
-      console.error("Error creating campaign:", error.message);
+      console.log("Error creating campaign:", error);
     }
   };
 
